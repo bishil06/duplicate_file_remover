@@ -21,6 +21,6 @@ const isDirectory = (dir) => {
     });
 };
 
-isDirectory('./readme.md').then(console.log); // test code
+// isDirectory('./readme.md').then(console.log); // test code
 
 exports.isDirectory = isDirectory;
