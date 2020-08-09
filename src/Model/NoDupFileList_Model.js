@@ -1,0 +1,3 @@
+class NoDupFileList {
+  constructor() {}
+}
