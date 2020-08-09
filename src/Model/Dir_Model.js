@@ -20,7 +20,7 @@ class RootDir {
 
   getAllFileList() {
     let allFileList = [];
-    allFileList = allFileList.concat(this.fileList);
+    allFileList = allFileList.concat(this.fileList ? this.fileList : []);
     for (const subDir of this.subDirs) {
       allFileList = allFileList.concat(subDir.getAllFileList());
     }
