@@ -17,6 +17,23 @@ class RootDir {
       return dirObj;
     });
   }
+
+  getAllFileList() {
+    let allFileList = [];
+    allFileList = allFileList.concat(this.fileList);
+    for (const subDir of this.subDirs) {
+      allFileList = allFileList.concat(subDir.getAllFileList());
+    }
+    return allFileList;
+  }
+
+  getAllDirList() {
+    let allDirList = [];
+    for (const subDir of this.subDirs) {
+      allDirList = allDirList.concat(subDir.getDirList());
+    }
+    return allDirList;
+  }
 }
 
 class Dir extends RootDir {
@@ -71,17 +88,18 @@ class Dir extends RootDir {
     });
   }
 
-  getFileList() {
-    let result = [];
-    result = result.concat(this.fileList);
+  getDirList() {
+    let allDirList = [];
+    allDirList.push(this);
     for (const subDir of this.subDirs) {
-      result = result.concat(subDir.getFileList());
+      allDirList = allDirList.concat(subDir.getDirList());
     }
-    return result;
+
+    return allDirList;
   }
 }
 
-// const rootDir = new RootDir();
+const rootDir = new RootDir();
 
 // const subdir = rootDir.addSubDir('./').then((subdir) => {
 //   console.log(subdir);
@@ -89,7 +107,9 @@ class Dir extends RootDir {
 // }); // test code
 // subdir
 //   .then((o) => o.readDir())
-//   .then((o) => o.getFileList())
+//   .then((o) => o.getDirList())
+//   .then((r) => console.log(r))
+//   .then(() => rootDir.getAllDirList())
 //   .then((r) => console.log(r));
 
 exports.rootDir = rootDir;
