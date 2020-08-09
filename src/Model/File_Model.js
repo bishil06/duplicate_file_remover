@@ -3,6 +3,7 @@ const path_module = require('path');
 const { isFile } = require('../isFile.js');
 const { isCanReadable } = require('../isCanReadable.js');
 const { getStat } = require('../getStat.js');
+const { getHash } = require('../getHash.js');
 
 class File {
   constructor(file_path) {
@@ -32,12 +33,19 @@ class File {
   getFileName() {
     return path_module.basename(this.path);
   }
+
+  getHash() {
+    return new Promise((res, rej) => {
+      getHash(this.path).then(res).catch(rej);
+    });
+  }
 }
 
 // const fileObj = new File('./readme.md'); // test code
 // fileObj.then((o) => {
 //   console.log(o.getFileSize());
 //   console.log(o.getFileName());
+//   o.getHash().then(console.log);
 // });
 
 exports.File = File;
