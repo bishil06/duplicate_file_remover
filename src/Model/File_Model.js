@@ -39,6 +39,24 @@ class File {
       getHash(this.path).then(res).catch(rej);
     });
   }
+
+  compareSize(fileObj) {
+    return this.getFileSize() == fileObj.getFileSize();
+  }
+
+  compareHash(fileObj) {
+    return new Promise((res, rej) => {
+      try {
+        Promise.all([this.getHash(), fileObj.getHash()])
+          .then((result) => {
+            return result[0] == result[1];
+          })
+          .then(res);
+      } catch (error) {
+        rej(error);
+      }
+    });
+  }
 }
 
 // const fileObj = new File('./readme.md'); // test code
