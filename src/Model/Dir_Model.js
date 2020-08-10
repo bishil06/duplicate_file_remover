@@ -5,6 +5,7 @@ const { isCanReadable } = require('../isCanReadable.js');
 const { getDirent } = require('../getDirent.js');
 
 const { File } = require('./File_Model.js');
+const { NoDupFileList } = require('./NoDupFileList_Model.js');
 
 class RootDir {
   constructor() {
@@ -33,6 +34,20 @@ class RootDir {
       allDirList = allDirList.concat(subDir.getDirList());
     }
     return allDirList;
+  }
+
+  getNoDupFileList() {
+    const noDupFileList = new NoDupFileList();
+
+    return new Promise((res, rej) => {
+      try {
+        Promise.all(
+          this.getAllFileList().map((file) => noDupFileList.addNoDupFile(file))
+        ).then(() => res(noDupFileList));
+      } catch (err) {
+        rej(err);
+      }
+    });
   }
 }
 

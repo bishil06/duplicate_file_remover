@@ -37,10 +37,8 @@ function inspect_dirs(...dirObjs) {
 function main() {
   input_dirs(dest, ...dirs)
     .then((dirObjs) => inspect_dirs(...dirObjs))
-    .then(() => rootDir.getAllFileList())
-    .then((allFileList) => {
-      allFileList.forEach((file) => console.log(file.path));
-    });
+    .then(() => rootDir.getNoDupFileList())
+    .then(console.log);
 }
 
 main();
