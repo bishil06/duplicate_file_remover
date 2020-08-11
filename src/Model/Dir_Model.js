@@ -39,11 +39,13 @@ class RootDir {
   getNoDupFileList() {
     const noDupFileList = new NoDupFileList();
 
-    return new Promise((res, rej) => {
+    return new Promise(async (res, rej) => {
       try {
-        Promise.all(
-          this.getAllFileList().map((file) => noDupFileList.addNoDupFile(file))
-        ).then(() => res(noDupFileList));
+        for (const file of this.getAllFileList()) {
+          // await file.showInfo(); // 확인용 코드
+          await noDupFileList.addFile_to_noDupFileList(file); // .then(console.log); // 확인용 코드
+        }
+        res(noDupFileList);
       } catch (err) {
         rej(err);
       }

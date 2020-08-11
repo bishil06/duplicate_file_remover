@@ -3,43 +3,36 @@ class NoDupFileList {
     this.fileList = [];
   }
 
-  haveSameFileSize(fileObj) {
-    return new Promise((res, rej) => {
+  // 파일리스트에 같은 파일이 이미 존재하는지 검사
+  findSameFile_from_fileList(fileObj) {
+    return new Promise(async (res, rej) => {
       for (const file of this.fileList) {
-        const result = fileObj.compareSize(file);
-        if (result) {
-          res(file);
-        }
+        await fileObj
+          .compareFile(file)
+          .then((sameFile) => {
+            // 아직 전부 탐색된것이 아니기에 res(false) 를 추가하지 않았다.
+            if (sameFile) res(true);
+          })
+          .catch(rej);
       }
+      // 전부탐색했는데도 res(true) 가되지 않았기에 false 반환
       res(false);
     });
   }
 
-  addNoDupFile(fileObj) {
+  // 파일리스트에 같은파일이 이미 존재하는지 검사하고 없다면 추가
+  addFile_to_noDupFileList(fileObj) {
     return new Promise((res, rej) => {
-      try {
-        this.haveSameFileSize(fileObj).then((findSameSize) => {
-          if (findSameSize) {
-            // find same file size
-            fileObj.compareHash(findSameSize).then((isSameHash) => {
-              if (isSameHash) {
-                // hash 값이 같다
-                res(false); // file size 와 hash 값이 같은 파일이 이미 리스트에 존재한다
-              } else {
-                // hash 값이 다르다 -> 다른 파일
-                this.fileList.push(fileObj);
-                res(fileObj);
-              }
-            });
+      this.findSameFile_from_fileList(fileObj)
+        .then((sameFile) => {
+          if (sameFile) {
+            res(false);
           } else {
-            // not find -> 다른파일
             this.fileList.push(fileObj);
-            res(fileObj);
+            res(true);
           }
-        });
-      } catch (err) {
-        rej(err);
-      }
+        })
+        .catch(rej);
     });
   }
 }
