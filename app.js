@@ -1,4 +1,5 @@
 const { rootDir } = require('./src/Model/Dir_Model.js');
+
 const { isCanWriteable } = require('./src/isCanWriteable.js');
 
 let dirs = ['./test/test_dir1', './test/test_dir2', './test/test_dir3'];
