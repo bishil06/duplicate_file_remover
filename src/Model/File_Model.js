@@ -41,7 +41,7 @@ class File {
   }
 
   compareSize(fileObj) {
-    return this.getFileSize() == fileObj.getFileSize();
+    return this.getFileSize() === fileObj.getFileSize();
   }
 
   compareHash(fileObj) {
@@ -56,6 +56,20 @@ class File {
         rej(error);
       }
     });
+  }
+
+  compareFile(fileObj) {
+    return new Promise((res, rej) => {
+      if (this.compareSize(fileObj)) {
+        this.compareHash(fileObj).then(res).catch(rej);
+      } else {
+        res(false);
+      }
+    });
+  }
+
+  async showInfo() {
+    console.log(this.path, this.getFileSize(), await this.getHash());
   }
 }
 
