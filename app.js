@@ -35,10 +35,44 @@ function inspect_dirs(...dirObjs) {
   });
 }
 
+function copyNoDupFileList_to_dest({ fileList }, dest_dir) {
+  return new Promise((res, rej) => {
+    try {
+      Promise.all(
+        fileList.map((file) => {
+          return file
+            .copyFile(dest_dir)
+            .then((result) => {
+              return {
+                copy_success: result,
+                file,
+                dest_dir,
+              };
+            })
+            .catch((err) => {
+              console.error(
+                `Copy process is success? ${false} -> ${file.getFileName()} file copy to ${dest} \n ${err}`
+              );
+              return {
+                copy_success: false,
+                file,
+                dest_dir,
+                err,
+              };
+            });
+        })
+      ).then(res);
+    } catch (error) {
+      rej(error);
+    }
+  });
+}
+
 function main() {
   input_dirs(dest, ...dirs)
     .then((dirObjs) => inspect_dirs(...dirObjs))
     .then(() => rootDir.getNoDupFileList())
+    .then((noDupFileList) => copyNoDupFileList_to_dest(noDupFileList, dest))
     .then(console.log);
 }
 

@@ -4,6 +4,7 @@ const { isFile } = require('../isFile.js');
 const { isCanReadable } = require('../isCanReadable.js');
 const { getStat } = require('../getStat.js');
 const { getHash } = require('../getHash.js');
+const { copyFile } = require('../copyFile.js');
 
 class File {
   constructor(file_path) {
@@ -36,7 +37,12 @@ class File {
 
   getHash() {
     return new Promise((res, rej) => {
-      getHash(this.path).then(res).catch(rej);
+      getHash(this.path)
+        .then((hash) => {
+          this.hash = hash;
+          res(hash);
+        })
+        .catch(rej);
     });
   }
 
@@ -70,6 +76,13 @@ class File {
 
   async showInfo() {
     console.log(this.path, this.getFileSize(), await this.getHash());
+  }
+
+  copyFile(dest_path) {
+    const dest = path_module.join(dest_path, this.getFileName());
+    return new Promise((res, rej) => {
+      copyFile(this.path, dest).then(res).catch(rej);
+    });
   }
 }
 
